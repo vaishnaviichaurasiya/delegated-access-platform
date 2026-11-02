@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlalchemy
+pyjwt
+bcrypt
+faker
+pytest
+pytest-cov
+httpx
