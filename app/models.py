@@ -35,6 +35,23 @@ class ApprovalRequest(Base):
     requester_id = Column(Integer, ForeignKey("users.id"), index=True)
     approver_id = Column(Integer, ForeignKey("users.id"), index=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
+    decided_by_id = Column(Integer, ForeignKey("users.id"), nullable=True)    # who clicked approve
+    on_behalf_of_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # whose authority was used
+    grant_id = Column(Integer, nullable=True)
+    decided_at = Column(DateTime, nullable=True)
+
+
+class DelegationGrant(Base):
+    __tablename__ = "delegation_grants"
+    id = Column(Integer, primary_key=True)
+    grantor_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    grantee_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    scopes = Column(String, nullable=False)       # comma-separated, e.g. "expense_approval"
+    max_amount = Column(Float, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    status = Column(String, default="active")     # active or revoked
+    created_at = Column(DateTime, default=utcnow)
+    revoked_at = Column(DateTime, nullable=True)
 
 
 class ImpersonationSession(Base):
