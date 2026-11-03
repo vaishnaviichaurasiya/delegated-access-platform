@@ -221,3 +221,7 @@ __marimo__/
 
 venv/
 app.db
+
+.coverage
+htmlcov/
+.pytest_cache/
