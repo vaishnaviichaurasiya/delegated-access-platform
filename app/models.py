@@ -1,5 +1,10 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from datetime import datetime, timezone
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
 from app.database import Base
+
+
+def utcnow() -> datetime:
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class User(Base):
@@ -30,3 +35,25 @@ class ApprovalRequest(Base):
     requester_id = Column(Integer, ForeignKey("users.id"), index=True)
     approver_id = Column(Integer, ForeignKey("users.id"), index=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
+
+
+class ImpersonationSession(Base):
+    __tablename__ = "impersonation_sessions"
+    id = Column(Integer, primary_key=True)
+    actor_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    target_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    mode = Column(String, default="view_as")
+    started_at = Column(DateTime, default=utcnow)
+    expires_at = Column(DateTime, nullable=False)
+    ended_at = Column(DateTime, nullable=True)
+
+
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+    id = Column(Integer, primary_key=True)
+    actor_id = Column(Integer, index=True)            # who really did it
+    effective_user_id = Column(Integer, index=True)   # whose view/permissions were used
+    action = Column(String, nullable=False)
+    resource = Column(String)
+    result = Column(String)                           # success or denied
+    timestamp = Column(DateTime, default=utcnow, index=True)

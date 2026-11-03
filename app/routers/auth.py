@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.deps import get_current_user
+from app.deps import AuthContext, get_auth_context
 from app.models import User
 from app.schemas import LoginIn
 from app.security import verify_password, create_token
@@ -18,5 +18,11 @@ def login(body: LoginIn, db: Session = Depends(get_db)):
 
 
 @router.get("/me")
-def me(user: User = Depends(get_current_user)):
-    return {"id": user.id, "name": user.name, "role": user.role}
+def me(ctx: AuthContext = Depends(get_auth_context)):
+    return {
+        "id": ctx.effective.id,
+        "name": ctx.effective.name,
+        "role": ctx.effective.role,
+        "impersonating": ctx.mode is not None,
+        "actor": {"id": ctx.actor.id, "name": ctx.actor.name, "role": ctx.actor.role},
+    }
