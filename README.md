@@ -1,5 +1,7 @@
 # Delegated Access & Impersonation Platform (Prototype)
 
+![CI](https://github.com/vaishnaviichaurasiya/delegated-access-platform/actions/workflows/ci.yml/badge.svg)
+
 A backend prototype showing how an enterprise can let authorised users **view the system as another person (read-only)** and **approve requests on someone's behalf within strict limits**, with a full audit trail.
 
 > **Prototype:** built to demonstrate access-control design, not production-ready security.
@@ -14,7 +16,7 @@ A backend prototype showing how an enterprise can let authorised users **view th
 
 ## Tech stack
 
-Python, FastAPI, SQLAlchemy, SQLite, JWT (PyJWT), bcrypt, Pytest, pytest-cov, Faker
+Python, FastAPI, SQLAlchemy, SQLite, JWT (PyJWT), bcrypt, Pytest, pytest-cov, Docker, GitHub Actions, flake8
 
 ## Architecture
 
@@ -117,6 +119,12 @@ Open http://127.0.0.1:8000/docs
 5. While in View-As, try to approve. It returns 403 (read-only).
 6. As Admin, open `GET /audit-logs` to see every action with actor and effective user.
 
+## Run with Docker
+
+```bash
+docker build -t delegated-access-platform .
+docker run -p 8000:8000 delegated-access-platform
+```
 
 ## Testing
 
