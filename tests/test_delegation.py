@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from app.delegation import find_valid_grant
 from app.models import ApprovalRequest, DelegationGrant, User, utcnow
-from tests.helpers import (ADMIN, BIG, EMP1, PM1, PM2, PM2_REQ, SELF_REQ, SMALL,
+from tests.helpers import (ADMIN, BIG, PM1, PM2, PM2_REQ, SELF_REQ, SMALL,
                            SMALL2, login, make_grant)
 
 
